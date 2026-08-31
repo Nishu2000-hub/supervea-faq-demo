@@ -83,11 +83,22 @@ def key_dialog():
     pk = st.text_input("Provider key", type="password",
                        placeholder="Anthropic or OpenAI key")
     md = st.text_input("Model", value=DEFAULT_MODEL)
+
+    st.caption("Provider rates, USD per million tokens. Defaults are the "
+               "published Claude Sonnet 4.6 rates — change these if you are "
+               "using a different model.")
+    c1, c2 = st.columns(2)
+    pin = c1.number_input("Input $/M", value=3.00, min_value=0.0, step=0.5, format="%.2f")
+    pout = c2.number_input("Output $/M", value=15.00, min_value=0.0, step=0.5, format="%.2f")
+
     if st.button("Start", type="primary", use_container_width=True):
         if sv.strip() and pk.strip():
             st.session_state.sv = sv.strip()
             st.session_state.pk = pk.strip()
             st.session_state.model = md.strip() or DEFAULT_MODEL
+            st.session_state.pin = pin
+            st.session_state.pout = pout
+            st.session_state.psrc = f"entered by user: ${pin:.2f}/M in, ${pout:.2f}/M out"
             st.rerun()
         else:
             st.error("Both keys are required.")
@@ -97,6 +108,11 @@ if not (SUPERVEA_KEY and PROVIDER_KEY):
     SUPERVEA_KEY = st.session_state.get("sv", "")
     PROVIDER_KEY = st.session_state.get("pk", "")
     MODEL = st.session_state.get("model", DEFAULT_MODEL)
+
+if not (PRICE_IN or PRICE_OUT):
+    PRICE_IN = st.session_state.get("pin", 0.0)
+    PRICE_OUT = st.session_state.get("pout", 0.0)
+    PRICE_SOURCE = st.session_state.get("psrc", PRICE_SOURCE)
 
 IS_MOCK = PROVIDER_KEY == MOCK_KEY or not PROVIDER_KEY
 HAVE_KEYS = bool(SUPERVEA_KEY and PROVIDER_KEY)
