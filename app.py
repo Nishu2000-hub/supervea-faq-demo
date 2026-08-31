@@ -38,7 +38,7 @@ BASE_URL = os.environ.get("SUPERVEA_BASE_URL", "https://api.supervea.com").rstri
 PROXY = f"{BASE_URL}/api/v1/proxy"
 SUPERVEA_KEY = os.environ.get("SUPERVEA_KEY", "")
 PROVIDER_KEY = os.environ.get("PROVIDER_KEY", "")
-MODEL = os.environ.get("MODEL", "gpt-4o-mini")
+MODEL = os.environ.get("MODEL", "claude-sonnet-4-6")
 MOCK_KEY = "mock-openai-key-for-pilot-testing"
 IS_MOCK = PROVIDER_KEY == MOCK_KEY or not PROVIDER_KEY
 
