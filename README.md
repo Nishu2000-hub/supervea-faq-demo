@@ -1,54 +1,29 @@
-# Deploying the FAQ bot for team testing
+# Supervea FAQ Bot Caching Demo
 
-Each tester supplies their own Supervea key and provider key in the sidebar.
-Nothing is stored server-side and keys are not shared between sessions.
+This Streamlit application is built to demonstrate and independently measure the semantic caching capabilities of the Supervea AI Gateway. 
 
-## Deploy
+Instead of relying solely on the gateway's internal telemetry, this demo provides a client-side measurement harness. It compares direct-to-provider API calls against calls routed through the Supervea Gateway, logging wall-clock latency, token usage, and cost savings in real-time. 
 
-```bash
-cd app_demo
-git init
-git add app.py kb.py requirements.txt .gitignore README.md
-git commit -m "Supervea FAQ bot caching demo"
-git remote add origin https://github.com/<you>/supervea-faq-demo.git
-git push -u origin main
-```
+## Features
 
-Check `git status` before committing and confirm `.env` is not listed. If it
-was ever committed, rotate both keys — git history keeps it.
+* **Performance Benchmarking:** Directly compares Gateway cache HITs, Gateway cache MISSes, and Direct-to-Provider latencies.
+* **Independent Telemetry:** Measures true client-side wall-clock latency, providing a reliable second opinion to the Supervea dashboard.
+* **Cost & Token Tracking:** Calculates token usage and estimated cost savings based on provider rates.
+* **Secure Key Management:** Supervea and Provider API keys are entered directly in the browser via a modal dialog and are never stored or hardcoded.
 
-Then at share.streamlit.io: sign in with GitHub, New app, pick the repo, main
-file `app.py`, Deploy. It builds in a couple of minutes and gives you a URL.
+## File Structure
 
-Send the URL plus: enter your own two keys in the sidebar, ask a question
-twice, watch the second one come back as a HIT.
+* `app.py`: The main Streamlit application containing the UI and benchmarking logic.
+* `kb.py`: The knowledge base containing the test FAQ questions.
+* `requirements.txt`: Python package dependencies (including Streamlit).
+* `.gitignore`: Standard git ignore file.
+* `README.md`: This documentation file.
 
-## Two things to tell people
+## How to Run Locally
 
-**The URL is publicly reachable.** Streamlit Community Cloud apps aren't
-private on the free tier. Anyone with the link can open it, though they'd need
-their own keys to do anything. Share it internally, don't post it publicly.
+You don't need any complex setup or environment variables to run this locally. 
 
-**The app server sees the provider key in transit.** That's inherent to a
-hosted app. For internal testing it's fine; if anyone is uneasy, they can clone
-the repo and run it locally with a `.env` instead.
-
-## Why deploying is useful beyond convenience
-
-Streamlit Cloud runs in the US. Sahil's numbers were measured from India, where
-roughly 1 second of every call is network round-trip — visible in the hits,
-which land at ~1,050 ms wall-clock against ~85 ms self-reported by the gateway.
-
-Running the same app from a US host isolates that. If gateway misses still take
-~19 seconds from Streamlit Cloud, the latency is in the gateway. If they drop
-to ~4 seconds, a large part of it was the round-trip from India. Either answer
-is worth having, and it costs one test run.
-
-## Local install
-
-```bash
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env        # fill in keys and pricing
-streamlit run app.py
-```
+1. **Install Dependencies:**
+   Ensure you have Python installed, then run:
+   ```bash
+   pip install -r requirements.txt
