@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Streamlit URL
-        run: curl -sL -o /dev/null -w "%{http_code}" https://supervea-faq-demo-bg3hrfutoi7f6uf4nvysnb.streamlit.app/
+        run: curl -sL -o /dev/null -w "%{http_code}" https://supervea-faq-demo-bg3hrfutoi7f6uf4nvysnb.streamlit.app/healthz
